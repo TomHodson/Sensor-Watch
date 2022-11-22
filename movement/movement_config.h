@@ -27,12 +27,30 @@
 
 #include "movement_faces.h"
 
+//Kennington Park 51.483672897286304, -0.10904576148117995
+//longitude is east/west
+//latitude is north/south
+
+#define MOVEMENT_CUSTOM_BOOT_COMMANDS() { \
+    movement_state.settings.bit.led_green_color = 0xF;\
+    movement_state.settings.bit.led_red_color = 0x8;\
+    movement_state.settings.bit.clock_mode_24h = 1;\
+    movement_state.settings.bit.use_imperial_units = 0;\
+    watch_store_backup_data(movement_state.settings.reg, 0);\
+    \
+    movement_location_t movement_location = (movement_location_t) watch_get_backup_data(1);\
+    movement_location.bit.longitude = -109;\
+    movement_location.bit.latitude = 5148;\
+    watch_store_backup_data(movement_location.reg, 1);\
+}
+
 const watch_face_t watch_faces[] = {
     simple_clock_face,
-    world_clock_face,
     sunrise_sunset_face,
     moon_phase_face,
     thermistor_readout_face,
+    blinky_face,
+
     preferences_face,
     set_time_face,
 };
@@ -44,6 +62,6 @@ const watch_face_t watch_faces[] = {
  * excludes these faces from the normal rotation.
  * Usually it makes sense to set this to the preferences face.
  */
-#define MOVEMENT_SECONDARY_FACE_INDEX 0 // or (MOVEMENT_NUM_FACES - 2)
+#define MOVEMENT_SECONDARY_FACE_INDEX (MOVEMENT_NUM_FACES - 2)
 
 #endif // MOVEMENT_CONFIG_H_
